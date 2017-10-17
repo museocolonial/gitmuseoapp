@@ -10,7 +10,7 @@ var connect = require('connect');
 var ObraController = require(__dirname + "/controller/obracontroller.js");
 var BannersController = require(__dirname + "/controller/bannersController.js");
 var UsuarioControlador = require(__dirname + "/controller/usuarioControlador.js");
-var MensajesControlador = require(__dirname + "/controller/mensajesController.js"); 
+var MensajesControlador = require(__dirname + "/controller/mensajesController.js");
 
 
 /**
@@ -31,8 +31,8 @@ var SampleApp = function() {
      */
     self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP ? process.env.OPENSHIFT_NODEJS_IP : process.env.IP || "0.0.0.0";
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT ? process.env.OPENSHIFT_NODEJS_PORT || 8080 : process.env.PORT || 3000;
+        self.ipaddress = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+        self.port      = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
@@ -107,7 +107,7 @@ var SampleApp = function() {
         self.routes = BannersController(self.routes);
         self.routes = UsuarioControlador(self.routes);
         self.routes = MensajesControlador(self.routes);
-        
+
     };
 
 
@@ -124,22 +124,22 @@ var SampleApp = function() {
             console.log("Carpeta datos open shift");
             console.log(process.env.OPENSHIFT_DATA_DIR);
         }
-        
+
         self.app.use(bodyParser.urlencoded({extended: false}));
         self.app.use(bodyParser.json());
         self.app.use(express.cookieParser());
         self.app.use(session({secret: '1234567890QWERTY'}));
         console.log("agregando rutas");
         for (var r in self.routes) {
-            
+
             if (self.routes[r].type == "GET") {
                 self.app.get(self.routes[r].path, self.routes[r].func);
             }
-            
+
             if (self.routes[r].type == "POST") {
                 self.app.post(self.routes[r].path, self.routes[r].func);
             }
-            
+
             if (self.routes[r].type == "PUT") {
                 if (self.routes[r].middleware) {
                     self.app.put(self.routes[r].path, self.routes[r].middleware, self.routes[r].func);
@@ -147,7 +147,7 @@ var SampleApp = function() {
                     self.app.put(self.routes[r].path, self.routes[r].func);
                 }
             }
-            
+
             if (self.routes[r].type == "DELETE") {
                 self.app.delete(self.routes[r].path, self.routes[r].func);
             }
@@ -189,4 +189,3 @@ var SampleApp = function() {
 var zapp = new SampleApp();
 zapp.initialize();
 zapp.start();
-
