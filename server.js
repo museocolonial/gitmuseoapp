@@ -117,7 +117,7 @@ var SampleApp = function() {
      */
     self.initializeServer = function() {
         self.createRoutes();
-        self.app = express.createServer();
+        self.app = express();
         self.app.use(express.static(__dirname + '/public'));
         if (process.env.OPENSHIFT_DATA_DIR != null) {
             self.app.use(express.static(process.env.OPENSHIFT_DATA_DIR + '/public'));
