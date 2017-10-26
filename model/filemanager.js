@@ -9,17 +9,17 @@ var FileManager = function (pathForFiles, files) {
         console.log("instance.files.length:"+instance.files.length);
         if (instance.files.length > 0) {
             var file = instance.files.pop();
-            
+
             instance.fs.readFile(file.path, function (err, data) {
-                
+
                 var ext = file.name.split(".")[1];
                 var filePath = guid() + "." + ext;
                 var dirPath = __dirname;
                 var pathForFiles = instance.pathForFiles;
-                if (process.env.OPENSHIFT_DATA_DIR != null) {
-                    dirPath = process.env.OPENSHIFT_DATA_DIR;
+                if ("/opt/data" != null) {
+                    dirPath = "/opt/data";
                     pathForFiles = instance.pathForFiles.replace("../", "");
-                    console.log(process.env.OPENSHIFT_DATA_DIR);
+                    console.log("/opt/data");
                 }
                 instance.fs.writeFile(instance.path.join(dirPath, pathForFiles + filePath), data, function (errW) {
                                         if(!errW) {
@@ -31,7 +31,7 @@ var FileManager = function (pathForFiles, files) {
                                             console.log(filesPath);
                                             callback(filesPath, errW);
                                         }
-                                        
+
                                     });
             });
         } else {
@@ -41,7 +41,7 @@ var FileManager = function (pathForFiles, files) {
         }
     }
     var instance = this;
-    
+
 }
 
 function guid() {
@@ -61,5 +61,5 @@ function getAsArray(obj) {
    }
    return objArray;
 }
-    
+
 module.exports = FileManager;

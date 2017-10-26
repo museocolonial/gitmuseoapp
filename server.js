@@ -119,10 +119,10 @@ var SampleApp = function() {
         self.createRoutes();
         self.app = express();
         self.app.use(express.static(__dirname + '/public'));
-        if (process.env.OPENSHIFT_DATA_DIR != null) {
-            self.app.use(express.static(process.env.OPENSHIFT_DATA_DIR + '/public'));
+        if ("/opt/data" != null) {
+            self.app.use(express.static("/opt/data" + '/public'));
             console.log("Carpeta datos open shift");
-            console.log(process.env.OPENSHIFT_DATA_DIR);
+            console.log("/opt/data");
         }
 
         self.app.use(bodyParser.urlencoded({extended: false}));
