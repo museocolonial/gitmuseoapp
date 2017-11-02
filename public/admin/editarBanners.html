@@ -29,13 +29,13 @@
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-  
+
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/ico/apple-touch-icon-144.png">
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/ico/apple-touch-icon-114.png">
   <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72.png">
   <link rel="apple-touch-icon-precomposed" href="img/ico/apple-touch-icon-57.png">
   <link rel="shortcut icon" href="img/ico/favicon.ico">
-  
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -61,12 +61,12 @@
         <span class="sr-only">Toggle navigation</span>
       </a>
 
-      
+
     </nav>
   </header>
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar" id="sideBar">
-    
+
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
@@ -86,11 +86,11 @@
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
-      
+
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
-       
+
       <div class="col-md-12">
           <!-- general form elements -->
           <div class="box box-primary">
@@ -108,7 +108,7 @@
                       <div style="float:left;margin-top: 20px;">
                         <div>
                           <label for="currentBanner1Image">Banner Actual</label>
-                        </div> 
+                        </div>
                         <div style="width: 320px; height: 480px; background: #e4e4e4;">
                           <img id="currentBanner1Image" width="100%" ></img>
                         </div>
@@ -142,9 +142,9 @@
                       <div style="float:left;margin-top: 20px;">
                         <div>
                           <label for="currentBanner2Image">Banner Actual</label>
-                        </div> 
+                        </div>
                         <div style="width: 320px; height: 480px; background: #e4e4e4;">
-                          <img id="currentBanner2Image" width="30%" ></img>
+                          <img id="currentBanner2Image" width="100%" ></img>
                         </div>
                       </div>
                       <div style="float: left;margin-left: 50px; height:471px;margin-top: 20px;">
@@ -176,9 +176,9 @@
                       <div style="float:left;margin-top: 20px;">
                         <div>
                           <label for="currentBanner3Image">Banner Actual</label>
-                        </div> 
+                        </div>
                         <div style="width: 320px; height: 480px; background: #e4e4e4;">
-                          <img id="currentBanner3Image" width="30%" ></img>
+                          <img id="currentBanner3Image" width="100%" ></img>
                         </div>
                       </div>
                       <div style="float: left;margin-left: 50px; height:471px;margin-top: 20px;">
@@ -197,7 +197,7 @@
                           <button class="btn btn-primary" style="width: 280px; border-radius: 0px; border-color: transparent; height: 44px; background: #007889; margin-top: 30px; font-weight: bold; font-size: 17px;" onclick="editarBanner(3);">Editar Banner</button>
                         </div>
                       </div>
-                      
+
                     </div>
                   </div>
                   <!-- /.box-body -->
@@ -211,9 +211,9 @@
                       <div style="float:left;margin-top: 20px;">
                         <div>
                           <label for="currentBanner4Image">Banner Actual</label>
-                        </div> 
+                        </div>
                         <div style="width: 320px; height: 480px; background: #e4e4e4;">
-                          <img id="currentBanner4Image" width="30%" ></img>
+                          <img id="currentBanner4Image" width="100%" ></img>
                         </div>
                       </div>
                       <div style="float: left;margin-left: 50px; height:471px;margin-top: 20px;">
@@ -232,14 +232,14 @@
                           <button class="btn btn-primary" style="width: 280px; border-radius: 0px; border-color: transparent; height: 44px; background: #007889; margin-top: 30px; font-weight: bold; font-size: 17px;" onclick="editarBanner(4);">Editar Banner</button>
                         </div>
                       </div>
-                      
+
                     </div>
                   </div>
                   <!-- /.box-body -->
                 </form>
               </li>
             </ul>
-            
+
           </div>
           <!-- /.box -->
 
@@ -303,7 +303,7 @@
 <script type="text/javascript">
 $(document).ready(function () {
   loadBanners();
-});  
+});
 var currentBanners = [];
   function loadBanners() {
     var bannersManager = new BannersManager();
@@ -317,13 +317,13 @@ var currentBanners = [];
         $("#banner" + (i+1) + "Url").val(banner.url);
       }
     }, function (rm) {
-      
+
     });
   }
-  
+
   function editarBanner(index) {
     if (confirm("Seguro desea editar este Banner?")) {
-      
+
       var bannersManager = new BannersManager();
       var updateBanner = bannersManager.getSkeleton();
       updateBanner.url = $("#banner" + index + "Url").val();
@@ -331,11 +331,11 @@ var currentBanners = [];
       bannersManager.update(updateBanner, document.getElementById("banner"+index+"Image").files, function (rm) {
         loadBanners();
       }, function(rm) {
-        
+
       });
     }
   }
-  
+
 </script>
 </body>
 </html>
