@@ -8,15 +8,15 @@ var Obra = function () {
     this.fs = require("fs");
     this.path = require('path');
     var connection = new Connection();
-    
+
     var connParams = connection.getConnParams();
-    
+
     //Obteniendo recursos
     this.mysql = require("mysql");
-    
+
     var connection = new Connection();
     var connParams = connection.getConnParams();
-    
+
     //funciones
     this.crearConexion = function (conexionCreada) {
         var connection = instance.mysql.createConnection(connParams);
@@ -26,35 +26,35 @@ var Obra = function () {
             conexionCreada(null);
             return;
           }
-        
+
           console.log('connected as id ' + connection.threadId);
           conexionCreada(connection);
-          setTimeout(function() {connection.end();}, 1000);
-          
+          setTimeout(function() {connection.end({timeout: 60000});}, 1000);
+
         });
     }
-    
+
     this.getObras = function (responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlUpdate = "select * from obras";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.insertObra = function (obraObject, files, responseCallback) {
         console.log(Object.keys(files).length);
         if (Object.keys(files).length > 0) {
@@ -69,14 +69,14 @@ var Obra = function () {
             obraObject.audio = null;
             insertObraData(obraObject, responseCallback);
         }
-        
+
     }
-    
+
     function insertObraData(obraObject, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var imageInfo = obraObject.imagen != null ? ",'" + obraObject.imagen + "'" : "";
                 var audioInfo = obraObject.audio != null ? ",'" + obraObject.audio + "'" : "";
                 var metodoCall = "insertarObra";
@@ -86,18 +86,18 @@ var Obra = function () {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.updateObra = function (obraObject, files, responseCallback) {
         if (Object.keys(files).length > 0) {
             var fileManager = new FileManager("../public/uploads/", files);
@@ -112,44 +112,44 @@ var Obra = function () {
             updateObraData(obraObject, responseCallback);
         }
     }
-    
+
     function updateObraData(obraObject, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
-                var mediaInfo = obraObject.imagen != null && obraObject.audio != null ? 
-                                                                                      ",'" + obraObject.imagen + "','" + obraObject.audio + "'" 
+
+                var mediaInfo = obraObject.imagen != null && obraObject.audio != null ?
+                                                                                      ",'" + obraObject.imagen + "','" + obraObject.audio + "'"
                                                                                       : obraObject.imagen != null ? ",'" + obraObject.imagen + "'"
                                                                                       : obraObject.audio != null ? ",'" + obraObject.audio + "'"
                                                                                       : "";
-                var metodoCall = obraObject.imagen != null && obraObject.audio != null ? 
-                                                                                      "updateObra" 
+                var metodoCall = obraObject.imagen != null && obraObject.audio != null ?
+                                                                                      "updateObra"
                                                                                       : obraObject.imagen != null ? "updateObraConImagen"
                                                                                       : obraObject.audio != null ? "updateObraConAudio"
                                                                                       : "updateObraNoMedia";
-                
+
                 var sqlUpdate = "CALL " + metodoCall + "("+obraObject.id+" ,'" + obraObject.nombre + "', '" + obraObject.descripcionCorta + "','" + obraObject.descripcionLarga + "'" + mediaInfo + ","+obraObject.idioma+");";
                 console.log(sqlUpdate);
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.getObraPorIdyIdioma = function (obraObject, responseCallback) {
          instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlGet = "CALL obtenerObraPorIdyIdioma(" + obraObject.id + ", " + obraObject.idioma + ")";
                 connection.query(sqlGet, function (err, rows) {
@@ -165,10 +165,10 @@ var Obra = function () {
             }
         });
     }
-    
+
     this.getObraPorId = function (id, responseCallback) {
          instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlGet = "CALL obtenerObraPorId(" + id + ")";
                 connection.query(sqlGet, function (err, rows) {
@@ -184,10 +184,10 @@ var Obra = function () {
             }
         });
     }
-    
+
     this.getObraPorIdBeacon = function (idBeacon, idioma, responseCallback) {
          instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlGet = "CALL obtenerObraPorBeacon('" + idBeacon + "', " + idioma + ")";
                 console.log(sqlGet);
@@ -204,10 +204,10 @@ var Obra = function () {
             }
         });
     }
-    
+
     this.eliminarObra = function (id, responseCallback) {
          instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlGet = "CALL eliminarObra(" + id + ")";
                 connection.query(sqlGet, function (err, rows) {
@@ -223,10 +223,10 @@ var Obra = function () {
             }
         });
     }
-    
+
     this.buscarObraPorNombre = function (nombre, responseCallback) {
          instance.crearConexion(function (connection) {
-            
+
             if (connection) {
                 var sqlGet = "CALL buscarObraPorNombre('" + nombre + "')";
                 connection.query(sqlGet, function (err, rows) {
@@ -242,7 +242,7 @@ var Obra = function () {
             }
         });
     }
-    
+
     this.updateBeaconInfoObra = function(beaconObject, responseCallback) {
         instance.crearConexion(function (connection) {
             if (connection) {
@@ -263,7 +263,7 @@ var Obra = function () {
             }
         });
     }
-    
+
     function getResource(filesPath, type) {
         for (var index = 0; index < filesPath.length; index++) {
             var filePath = filesPath[index].path;
@@ -273,7 +273,7 @@ var Obra = function () {
         }
         return null;
     }
-    
+
     var instance = this;
 }
 

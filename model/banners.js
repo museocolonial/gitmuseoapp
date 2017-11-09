@@ -9,9 +9,9 @@ var Banners = function () {
     this.fs = require("fs");
     this.path = require('path');
     var connection = new Connection();
-    
+
     var connParams = connection.getConnParams();
-    
+
     //funciones
     this.crearConexion = function (conexionCreada) {
         var connection = instance.mysql.createConnection(connParams);
@@ -21,13 +21,13 @@ var Banners = function () {
             conexionCreada(null);
             return;
           }
-        
+
           console.log('connected as id ' + connection.threadId);
           conexionCreada(connection);
-          connection.end();
+          connection.end({timeout: 60000});
         });
     }
-    
+
     this.update = function (bannersData, files, responseCallback) {
         console.log("Files");
         console.log(files);
@@ -42,10 +42,10 @@ var Banners = function () {
             updateDataBanners(bannersData, "", responseCallback);
         }
     }
-    
+
     function updateDataBanners(bannersData, path, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
                 if (connection) {
                     var urlImage = path.length > 0 ? "urlImage = '" + path + "'," : "";
                     var sqlUpdate = "update banners set " + urlImage + "url = '" + bannersData.url + "' where id = " + bannersData.id + ";";
@@ -54,63 +54,63 @@ var Banners = function () {
                                 var responseManager = new ResponseManager();
                                 if (err) {
                                     responseManager.error = err;
-                                    responseCallback(responseManager);   
+                                    responseCallback(responseManager);
                                 } else {
                                     responseManager.object = bannersData;
-                                    responseManager.error = "NO_ERROR";            
+                                    responseManager.error = "NO_ERROR";
                                     responseCallback(responseManager);
                                 }
                      });
-                    
+
                 }
             });
     }
-    
+
     this.getBanner = function (bannersData, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "select * from banners where id = " + bannersData.id + ";";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows[0];
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.getBanners = function (bannersData, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "select * from banners";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
-    
+
+
     var instance = this;
 }
 

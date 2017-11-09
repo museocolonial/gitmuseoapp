@@ -7,9 +7,9 @@ var Mensaje = function () {
     this.fs = require("fs");
     this.path = require('path');
     var connection = new Connection();
-    
+
     var connParams = connection.getConnParams();
-    
+
     //funciones
     this.crearConexion = function (conexionCreada) {
         var connection = instance.mysql.createConnection(connParams);
@@ -19,128 +19,128 @@ var Mensaje = function () {
             conexionCreada(null);
             return;
           }
-        
+
           console.log('connected as id ' + connection.threadId + ' de mysql');
           conexionCreada(connection);
-          connection.end();
+          connection.end({timeout: 60000});
         });
     }
-    
+
     this.insertMensaje = function (mensajeData, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlInsert = "insert into mensajes (nombre,email,telefono,mensaje,fecha) values ('"+mensajeData.nombre+"','"+mensajeData.email+"','"+mensajeData.telefono+"','"+mensajeData.mensaje+"',sysdate());";
                  connection.query(sqlInsert, function(err, rows) {
                     var responseManager = new ResponseManager();
                     if (err) {
                         responseManager.error = err;
-                        responseCallback(responseManager);   
+                        responseCallback(responseManager);
                     } else {
                         responseManager.object = mensajeData;
-                        responseManager.error = "NO_ERROR";            
+                        responseManager.error = "NO_ERROR";
                         responseCallback(responseManager);
                     }
                 });
             }
         });
-        
+
     }
-    
+
     this.updateMensaje = function (mensajeData, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "update mensajes set nombre = '"+mensajeData.nombre+"', email = '"+mensajeData.email+"', asunto = '"+mensajeData.asunto+"', mensaje = '"+mensajeData.mensaje+"' where id = " + mensajeData.id + ";";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = mensajeData;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
-        
+
     }
-    
+
     this.deleteMensaje = function (mensajeData, responseCallback) {
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "delete from mensajes where id = " + mensajeData.id + ";";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = mensajeData;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.getMensajeById = function (mensajeData, responseCallback) {
         console.log("getting Mensajes id");
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "select * from mensajes where id = " + mensajeData.id + ";";
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows[0];
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
+
     this.getMensaje = function (mensajeData, responseCallback) {
         console.log("getting Mensajes");
         instance.crearConexion(function (connection) {
-            
+
             if (connection) {
-                
+
                 var sqlUpdate = "select * from mensajes";
                 console.log(sqlUpdate);
                  connection.query(sqlUpdate, function(err, rows) {
                             var responseManager = new ResponseManager();
                             if (err) {
                                 responseManager.error = err;
-                                responseCallback(responseManager);   
+                                responseCallback(responseManager);
                             } else {
                                 responseManager.object = rows;
-                                responseManager.error = "NO_ERROR";            
+                                responseManager.error = "NO_ERROR";
                                 responseCallback(responseManager);
                             }
                  });
-                
+
             }
         });
     }
-    
-    
+
+
     var instance = this;
 }
 

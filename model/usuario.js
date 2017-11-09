@@ -5,10 +5,10 @@ var Usuario = function () {
 
     //Obteniendo recursos
     this.mysql = require("mysql");
-    
+
     var connection = new Connection();
     var connParams = connection.getConnParams();
-    
+
     //funciones
     this.crearConexion = function (conexionCreada) {
         var connection = instance.mysql.createConnection(connParams);
@@ -18,15 +18,15 @@ var Usuario = function () {
             conexionCreada(null);
             return;
           }
-        
+
           console.log('connected as id ' + connection.threadId);
           conexionCreada(connection);
-          setTimeout(function() {connection.end();}, 1000);
-          
+          setTimeout(function() {connection.end({timeout: 60000});}, 1000);
+
         });
     }
-    
-    
+
+
     this.authUser = function (userAuthData, responseCallback) {
         instance.crearConexion(function (connection) {
             if (connection) {
@@ -41,7 +41,7 @@ var Usuario = function () {
                             responseManager.error = "Usuario o password incorrecto";
                         } else {
                            responseManager.error = "NO_ERROR";
-                           responseManager.object = rows[0]; 
+                           responseManager.object = rows[0];
                         }
                     }
                     responseCallback(responseManager);
@@ -49,10 +49,9 @@ var Usuario = function () {
             }
         });
     }
-    
+
     var instance = this;
 
 }
 
 module.exports = Usuario;
-
